@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 print("Add Commit Push")
 print("Executing \"git status\":")
@@ -24,6 +25,11 @@ print("")
 
 # Run the git commit command
 message = "\"Update files.\""
+print (len(sys.argv))
+if len(sys.argv) != 3:
+        print("Usage: python script.py <param1> <param2>")
+
+
 resultGitCommit = subprocess.run(["git", "commit", "-m", message], capture_output=True, text=True)
 print(resultGitCommit.stdout)
 print("STDERR:") 
