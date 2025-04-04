@@ -5,6 +5,25 @@ print("Add Commit Push")
 print("Executing \"git status\":")
 print("")
 
+# Commands to be run
+queued_commands = [
+    'git status',
+    'git add -A',
+    f'git commit -m "{sys.argv[2]}"' if len(sys.argv) == 3 else 'git commit -m "Update files."',
+    'git push'
+]
+
+# Print queued commands
+print("The following Git commands will be executed:")
+for cmd in queued_commands:
+    print(f"  {cmd}")
+
+# Ask for confirmation
+confirm = input("\nDo you want to proceed? (y/n): ").strip().lower()
+if confirm != 'y':
+    print("Operation cancelled by the user.")
+    sys.exit(0)
+
 # Run the git status command
 resultGitStatus = subprocess.run(["git", "status"], capture_output=True, text=True)
 print(resultGitStatus.stdout) 
