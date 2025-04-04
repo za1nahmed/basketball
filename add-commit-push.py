@@ -25,10 +25,9 @@ print("")
 
 # Run the git commit command
 message = "\"Update files.\""
-print (len(sys.argv))
-if len(sys.argv) != 3:
-        print("Usage: python script.py <param1> <param2>")
-
+if len(sys.argv) == 3:
+    message = sys.argv[2]
+    print (message)
 
 resultGitCommit = subprocess.run(["git", "commit", "-m", message], capture_output=True, text=True)
 print(resultGitCommit.stdout)
