@@ -1,81 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Basketball Game</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
-        canvas {
-            background: url('https://upload.wikimedia.org/wikipedia/commons/c/cb/Basketball_court_diagram.png');
-            background-size: cover;
-            display: block;
-            margin: auto;
-            border: 2px solid black;
-        }
-        button {
-            font-size: 18px;
-            padding: 10px;
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Simple Basketball Game</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      background: #f2f2f2;
+    }
+
+    canvas {
+      background: url('https://upload.wikimedia.org/wikipedia/commons/c/cb/Basketball_court_diagram.png');
+      background-size: cover;
+      border: 2px solid #000;
+      display: block;
+      margin: 10px auto;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+    }
+
+    #scores {
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Shoot The Ball Into the Basket!</h1>
-    <canvas id="gameCanvas" width="400" height="500"></canvas>
-    <br>
-    <button onclick="shootBall()">Shoot!</button>
-    <p id="score">Score: 0</p>
 
-    <script>
-        let canvas = document.getElementById("gameCanvas");
-        let ctx = canvas.getContext("2d");
+  <h1>🏀 Simple Basketball Game</h1>
+  <canvas id="gameCanvas" width="400" height="500"></canvas>
 
-        let ball = { x: 200, y: 450, radius: 15, dy: -5 };
-        let score = 0;
+  <div id="scores">
+    <p>Decimal: <span id="dec">0</span></p>
+    <p>Binary: <span id="bin">0</span></p>
+    <p>Hex: <span id="hex">0</span></p>
+  </div>
 
-        let ballImg = new Image();
-        ballImg.src = "https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png";
+  <button onclick="shoot()">Shoot</button>
+  <button onclick="resetGame()">Reset</button>
 
-        function drawBall() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawHoop();
-            ctx.drawImage(ballImg, ball.x - ball.radius, ball.y - ball.radius, 30, 30);
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let score = 0;
+    let ballY = 450;
+    let moving = false;
+
+    const ballImg = new Image();
+    ballImg.src = "https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png";
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw hoop
+      ctx.fillStyle = "red";
+      ctx.fillRect(150, 50, 100, 10);
+
+      // Draw ball
+      ctx.drawImage(ballImg, 185, ballY, 30, 30);
+    }
+
+    function shoot() {
+      if (moving) return;
+      moving = true;
+
+      const interval = setInterval(() => {
+        ballY -= 5;
+        draw();
+
+        if (ballY <= 60) {
+          clearInterval(interval);
+          checkScore();
+          ballY = 450;
+          draw();
+          moving = false;
         }
+      }, 20);
+    }
 
-        function drawHoop() {
-            ctx.fillStyle = "red";
-            ctx.fillRect(150, 50, 100, 10); // Red hoop at the top
-        }
+    function checkScore() {
+      if (Math.random() < 0.5) {
+        score++;
+        updateScores();
+        alert("You scored!");
+      } else {
+        alert("Miss!");
+      }
+    }
 
-        function shootBall() {
-            let interval = setInterval(() => {
-                if (ball.y > 50) {
-                    ball.y += ball.dy;
-                    drawBall();
-                } else {
-                    clearInterval(interval);
-                    checkScore();
-                    ball.y = 450;
-                    drawBall();
-                }
-            }, 20);
-        }
+    function updateScores() {
+      document.getElementById("dec").textContent = score;
+      document.getElementById("bin").textContent = score.toString(2);
+      document.getElementById("hex").textContent = score.toString(16).toUpperCase();
+    }
 
-        function checkScore() {
-            if (Math.random() < 0.5) {
-                score++;
-                document.getElementById("score").innerText = "Score: " + score;
-                alert("Swish! You scored!");
-            } else {
-                alert("Miss! Try again.");
-            }
-        }
+    function resetGame() {
+      score = 0;
+      updateScores();
+      ballY = 450;
+      draw();
+    }
 
-        drawBall();
-    </script>
+    // Start
+    ballImg.onload = draw;
+  </script>
 </body>
 </html>
