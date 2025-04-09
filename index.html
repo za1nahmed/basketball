@@ -52,41 +52,46 @@
     const ballImg = new Image();
     ballImg.src = "https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png";
 
-    // Drawing Functions
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // === Wait for the image to load before drawing ===
+    ballImg.onload = function() {
+      draw(); // Start drawing once the image is loaded
+    };
 
-      // Draw hoop
+    // === Drawing Functions ===
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+      // Draw the hoop (red rectangle)
       ctx.fillStyle = "red";
       ctx.fillRect(150, 50, 100, 10);
 
-      // Draw ball
-      ctx.drawImage(ballImg, 185, ballY, 30, 30);
+      // Draw the ball (using the ball image)
+      ctx.drawImage(ballImg, 185, ballY, 30, 30); // Ball position
     }
 
-    // Game Functions
+    // === Game Functions ===
     function shoot() {
-      if (moving) return;
+      if (moving) return; // If the ball is already moving, don't shoot
       moving = true;
 
       const interval = setInterval(() => {
-        ballY -= 5;
-        draw();
+        ballY -= 5; // Move the ball upwards
+        draw(); // Redraw the canvas
 
-        if (ballY <= 60) {
-          clearInterval(interval);
-          checkScore();
-          ballY = 450;
-          draw();
-          moving = false;
+        if (ballY <= 60) { // If the ball reaches the hoop
+          clearInterval(interval); // Stop moving the ball
+          checkScore(); // Check if it scored
+          ballY = 450; // Reset the ball position
+          draw(); // Redraw after resetting
+          moving = false; // Stop the ball from moving
         }
       }, 20);
     }
 
     function checkScore() {
-      // chance to score
+      // Random chance to score
       if (Math.random() < 0.5) {
-        score++;
+        score++; // Increment score if scored
         document.getElementById("score").textContent = "Score: " + score;
         alert("You scored!");
       } else {
@@ -95,11 +100,13 @@
     }
 
     function resetGame() {
-      score = 0;
+      score = 0; // Reset score
       document.getElementById("score").textContent = "Score: " + score;
-      ballY = 450;
-      draw();
+      ballY = 450; // Reset ball position
+      draw(); // Redraw canvas
     }
 
-    // Start game
-    ballImg
+  </script>
+
+</body>
+</html>
